@@ -413,6 +413,19 @@ export function field(ctx, x, y, w_, label, value, p, { h_ = 74, size = 34, ltrV
   if (done > 0.002) stamp(ctx, done, x + 34, y + h_ / 2, 18);
 }
 
+// An amount in dinars: the number at the right, دج to its left (as on the site's plan cards).
+// k counts it up (0..1); sign is drawn before the number.
+export function money(ctx, n, xR, y, size, color, { k = 1, sign = '', unit = C.muted } = {}) {
+  const v = Math.round(n * k / 100) * 100;
+  const s = sign + v.toLocaleString('en-US');
+  const f = F(size, 900);
+  ltr(ctx, s, xR, y, f, color, 'right');
+  text(ctx, 'دج', xR - textW(ctx, s, f) - size * 0.2, y - size * 0.05, F(Math.round(size * 0.48), 700), unit);
+}
+// The small "مثال" tag on drawn example cards.
+export const mini = (ctx, str, xR, y, bgc = C.wash, fg = C.accent) => pill(ctx, xR, y, 40, str, F(22, 700, UI), { bg: bgc, fg, pad: 14 });
+export const exampleTag = (ctx, xL, y) => mini(ctx, 'مثال', xL + pillW(ctx, 'مثال', F(22, 700, UI), 40, null, 14), y);
+
 // ================================================================ backgrounds
 export function makeBg(kind) {
   const c = document.createElement('canvas'); c.width = W; c.height = H;
@@ -466,7 +479,7 @@ export function seriesScene(cfg) {
   return function series(ctx, u) {
     bg(ctx, 'blue');
     const s = cfg.sid, wh = 'rgba(255,255,255,.84)', n = S.N;
-    reveal(ctx, u, `الحلقة ${ORD[n]} من سلسلة تشغيل`, R, 170, F(48, 700), wh, cue(s, cfg.lead));
+    reveal(ctx, u, cfg.leadText || `الحلقة ${ORD[n]} من سلسلة تشغيل`, R, 170, F(48, 700), wh, cue(s, cfg.lead));
     const tB = cue(s, cfg.brand)[0];
     const kL = springU(u, tB - 0.15, SPRING.bouncy);
     pop(ctx, kL, R - 56, 270, () => logo(ctx, R - 112, 214, 112, { bg: C.white, fg: C.accent, p: clamp(kL * 1.2) }), { from: 0.4 });

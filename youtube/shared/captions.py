@@ -30,26 +30,37 @@ def stamp(t):
     return f"{h:02d}:{m:02d}:{s:02d},{ms:03d}"
 
 
-def phrases(words, max_words=9, max_chars=46):
-    out, cur = [], []
-    for i, (txt, a, b) in enumerate(words):
-        cur.append((txt, a, b))
-        chars = sum(len(x[0]) + 1 for x in cur)
-        nxt = words[i + 1][0] if i + 1 < len(words) else None
-        at_punct = bool(PUNCT.search(txt))
-        if nxt is None or (at_punct and len(cur) >= 3) or len(cur) >= max_words or \
-                (nxt and chars + len(nxt) > max_chars and len(cur) >= 3):
-            out.append(cur)
+def phrases(words, max_chars=50):
+    """Clauses end at punctuation; a long clause is split evenly; a one- or two-word clause joins a neighbour."""
+    clauses, cur = [], []
+    for w in words:
+        cur.append(w)
+        if PUNCT.search(w[0]):
+            clauses.append(cur)
             cur = []
     if cur:
-        out.append(cur)
-    # a dangling one- or two-word tail joins the phrase before it
-    merged = []
-    for p in out:
-        if merged and len(p) <= 2 and not PUNCT.search(merged[-1][-1][0]):
-            merged[-1] += p
+        clauses.append(cur)
+    size = lambda c: sum(len(x[0]) + 1 for x in c)
+    split = []
+    for c in clauses:
+        n = -(-size(c) // max_chars)
+        if n <= 1:
+            split.append(c)
+            continue
+        k = -(-len(c) // n)
+        split += [c[i:i + k] for i in range(0, len(c), k)]
+    out = []
+    for c in split:                       # a short clause joins the one before it if they fit together
+        if out and (len(c) <= 2 or len(out[-1]) <= 2) and size(out[-1]) + size(c) <= max_chars:
+            out[-1] = out[-1] + c
         else:
-            merged.append(p)
+            out.append(c)
+    merged = []
+    for c in out:                         # a short one left over joins the one after it
+        if merged and len(merged[-1]) <= 2 and size(merged[-1]) + size(c) <= max_chars + 6:
+            merged[-1] = merged[-1] + c
+        else:
+            merged.append(c)
     return merged
 
 
