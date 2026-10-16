@@ -5,15 +5,29 @@
 | # | الحلقة | الحالة |
 |---|--------|--------|
 | 1 | جهّز محلّك واختر النسخة المناسبة | جاهزة للرفع: `ep01/publish/` (الفيديو، الصورة المصغّرة، الترجمة، العنوان والوصف) |
-| 2 | أدخل المخزون | لم تبدأ |
+| 2 | أدخل المخزون | جاهزة للرفع: `ep02/publish/` |
 | 3 | رتّب الحسابات | لم تبدأ |
 | 4 | نفّذ أول بيع | لم تبدأ |
 | 5 | تابع الحركات | لم تبدأ |
 | 6 | راجع وراقب | لم تبدأ |
 
 كل حلقة فيلم مرسوم بالكود: كل إطار دالة في الزمن (`window.seek(t)`) يُرسم على canvas ويُصدَّر إطارًا بإطار.
-المشاهد مبنية فقط من اللقطات الحقيقية للبرنامج (`ep01/assets/shots/`، مأخوذة من الصفحة التعريفية)
+المشاهد مبنية فقط من اللقطات الحقيقية للبرنامج (`shared/shots/`، مأخوذة من الصفحة التعريفية)
 ومن نصوص وأشكال بهوية الموقع (الأزرق #2457f5، الكحلي #0c234a، تظليل الليموني #c5f85c).
+
+الحلقة 1 قائمة بذاتها (`ep01/`). الحلقات 2 إلى 6 تتشارك مجلد `shared/`:
+
+```
+shared/kit.js        الخطوط والأشكال والأيقونات والشاشات والانتقالات، والمشاهد المشتركة
+                     (افتتاح السلسلة، نقطة التحقق، الحلقة القادمة، الشاشة النهائية)
+shared/motion.js     محرّك الزمن (نسخة ep01/lib/motion.js)
+shared/score.py      الموسيقى نفسها لكل الحلقات + تركيب التعليق على الإيقاع -> vo_timeline.json و vo_words.json
+shared/captions.py   الترجمة العربية (.srt) وتوقيت الفصول من توقيت الكلمات
+shared/scripts.json  نصوص الحلقات 2 إلى 6
+tools/render_fast.mjs  نفس مُخرج المهارة، يقرأ الإطار من canvas مباشرة (أسرع 3 مرات تقريبًا، نفس البكسلات)
+```
+
+في `film.js` كل عنصر يظهر مع الكلمة التي تسمّيه: `cue('s04', 'هواتف جديدة')` تبحث عن الكلمات في توقيت Scribe.
 
 ## محتوى مجلد الحلقة
 
@@ -53,7 +67,20 @@ for f in ep01/audio/takes/*.mp3; do ffmpeg -v error -y -i "$f" -ar 48000 -ac 1 "
 
 التوقيت الدقيق لكل كلمة مكتوب في `film.js` (ثوانٍ نسبةً لبداية كل مقطع).
 
-## الحلقة التالية
+### الحلقات 2 إلى 6
 
-انسخ بنية `ep01/` إلى `ep02/` (المرحلة 02 في الدليل: الجرد، تقسيم المنتجات، IMEI، الأسعار والكميات،
-مراجعة عيّنة)، ثم: النص ← موافقة ← توليد الصوت ← `score.py` ← المشاهد ← المراجعة ← الإخراج.
+```bash
+for f in ep02/audio/takes/*.mp3; do ffmpeg -v error -y -i "$f" -ar 48000 -ac 1 "${f%.mp3}.wav"; done
+MOTION_REEL_SKILL=$SK uv run shared/score.py ep02
+MOTION_REEL_SKILL=$SK node tools/render_fast.mjs --film ep02 --contact --every 4
+MOTION_REEL_SKILL=$SK node tools/render_fast.mjs --film ep02 --video-only --workers 4
+MOTION_REEL_SKILL=$SK node tools/render_fast.mjs --film ep02 --hits && node $SK/scripts/sfx.mjs ep02
+node $SK/scripts/mix.mjs ep02 --music-db -6 --sfx-db -4
+python3 shared/captions.py ep02
+```
+
+## حلقة جديدة
+
+انسخ `ep02/index.html` وأنشئ `epNN/audio/plan.json` و`epNN/film.json`، ثم: النص (`shared/scripts.json`) ← توليد الصوت
+(مقطع واحد لكل قسم، صوت «Mehdi VO»، eleven_v4) ← توقيت الكلمات (Scribe) في `epNN/audio/takes/sNN_words.json`
+← `shared/score.py` ← المشاهد في `epNN/film.js` ← المراجعة بأوراق الإطارات ← الإخراج والمزج ← الترجمة.
