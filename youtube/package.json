@@ -1,0 +1,10 @@
+{
+  "name": "vancash-youtube",
+  "private": true,
+  "description": "VanCash ERP YouTube tutorial episodes, rendered from code (motion-reel).",
+  "devDependencies": {
+    "playwright": "1.56.1",
+    "@fontsource-variable/cairo": "5.2.6",
+    "@fontsource/ibm-plex-sans-arabic": "5.2.6"
+  }
+}
