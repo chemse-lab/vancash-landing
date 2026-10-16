@@ -39,7 +39,7 @@ MOTION_REEL_SKILL=$SK uv run ep01/audio/score.py          # music.wav, vo.wav, b
 node $SK/scripts/render.mjs --film ep01 --contact --every 4 # contact sheets for review
 node $SK/scripts/render.mjs --film ep01 --video-only --workers 4
 node $SK/scripts/render.mjs --film ep01 --hits && node $SK/scripts/sfx.mjs ep01
-node $SK/scripts/mix.mjs ep01 --sfx-db -3                   # -14 LUFS master -> out/ep01/final.mp4
+node $SK/scripts/mix.mjs ep01 --music-db -6 --sfx-db -4    # -14 LUFS master -> out/ep01/final.mp4
 node $SK/scripts/render.mjs --film ep01 --poster
 python3 ep01/publish/captions.py                            # ep01/publish/ep01.ar.srt
 ```
