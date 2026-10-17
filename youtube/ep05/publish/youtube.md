@@ -42,7 +42,7 @@
 
 ## الكلمات المفتاحية (Tags)
 
-VanCash ERP, VanCash, المصاريف, المشتريات, الموردين, استلام بضاعة, تسديد دين, المالية, صافي الربح, برنامج محاسبة محل, محلات الهواتف الجزائر, mobileposdz
+VanCash ERP, VanCash, المصاريف, المشتريات, الموردين, استلام بضاعة, تسديد دين, المالية, صافي الربح, برنامج محاسبة محل, محلات الهواتف الجزائر, mobileposdz, شرح VanCash, برنامج تسيير محل, logiciel gestion magasin téléphone, gestion des dépenses, achats fournisseurs
 
 ## إعدادات مقترحة
 

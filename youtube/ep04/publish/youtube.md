@@ -42,7 +42,7 @@
 
 ## الكلمات المفتاحية (Tags)
 
-VanCash ERP, VanCash, نقطة البيع, برنامج كاشير, برنامج نقطة بيع الجزائر, بيع هاتف, IMEI, فاتورة, QR, الدفع الجزئي, كريدي, محلات الهواتف الجزائر, mobileposdz
+VanCash ERP, VanCash, نقطة البيع, برنامج كاشير, برنامج نقطة بيع الجزائر, بيع هاتف, IMEI, فاتورة, QR, الدفع الجزئي, كريدي, محلات الهواتف الجزائر, mobileposdz, شرح VanCash, برنامج تسيير محل, logiciel point de vente, caisse enregistreuse, logiciel caisse Algérie
 
 ## إعدادات مقترحة
 

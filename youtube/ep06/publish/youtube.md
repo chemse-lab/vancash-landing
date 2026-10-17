@@ -42,7 +42,7 @@
 
 ## الكلمات المفتاحية (Tags)
 
-VanCash ERP, VanCash, تقارير المبيعات, الأرباح والخسائر, تقييم المخزون, صلاحيات المستخدمين, مزامنة, نسخ احتياطي, Online, Offline, محلات الهواتف الجزائر, mobileposdz
+VanCash ERP, VanCash, تقارير المبيعات, الأرباح والخسائر, تقييم المخزون, صلاحيات المستخدمين, مزامنة, نسخ احتياطي, Online, Offline, محلات الهواتف الجزائر, mobileposdz, شرح VanCash, برنامج تسيير محل, logiciel gestion magasin téléphone, rapports de ventes, sauvegarde des données
 
 ## إعدادات مقترحة
 
