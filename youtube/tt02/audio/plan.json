@@ -1,0 +1,15 @@
+{
+ "seed": 20261102,
+ "lick_rotate": 1,
+ "sections": [
+  "s01",
+  "s02",
+  "s03",
+  "s04",
+  "s05",
+  "s06"
+ ],
+ "gap_before": {},
+ "gap": 1.4,
+ "end_card_beats": 4
+}

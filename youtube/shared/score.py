@@ -56,7 +56,7 @@ SECTIONS = PLAN["sections"]
 FIRST_BEAT = 1          # the hook's voice starts one beat in; frame 0 is already a shot
 GAP = PLAN.get("gap", 0.85)   # minimum silence between sections (s)
 GAP_BEFORE = PLAN["gap_before"]
-END_CARD_BEATS = 10     # music after the last word: the end card holds >= 5 s
+END_CARD_BEATS = PLAN.get("end_card_beats", 10)   # music after the last word: the end card holds >= 5 s (shorts: less)
 LICK_ROT = PLAN.get("lick_rotate", 0)
 
 

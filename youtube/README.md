@@ -84,3 +84,42 @@ python3 shared/captions.py ep02
 انسخ `ep02/index.html` وأنشئ `epNN/audio/plan.json` و`epNN/film.json`، ثم: النص (`shared/scripts.json`) ← توليد الصوت
 (مقطع واحد لكل قسم، صوت «Mehdi VO»، eleven_v4) ← توقيت الكلمات (Scribe) في `epNN/audio/takes/sNN_words.json`
 ← `shared/score.py` ← المشاهد في `epNN/film.js` ← المراجعة بأوراق الإطارات ← الإخراج والمزج ← الترجمة.
+
+# فيديوهات تيك توك (عمودية، دقيقة واحدة)
+
+10 فيديوهات قصيرة بنفس الصوت والهوية، كل واحد فكرة واحدة من «دليل التشغيل»، والترجمة العربية مدمجة في الصورة.
+كل فيديو جاهز للنشر في `ttNN/publish/`: الفيديو `vancash-ttNN.mp4` (1080×1920)، الغلاف `cover.jpg`،
+ونص المنشور مع الوسوم في `tiktok.md`.
+
+| # | الموضوع | العنوان |
+|---|---------|---------|
+| 1 | النسخ | Offline أم Online؟ |
+| 2 | الهواتف | رقم IMEI لكل هاتف |
+| 3 | المخزون | ابدأ بجرد حقيقي |
+| 4 | الديون | الكريدي بدون فوضى |
+| 5 | البيع | الدفع الجزئي بدون أخطاء |
+| 6 | نقطة البيع | بيع هاتف في 4 خطوات |
+| 7 | المصاريف | أين ذهب الربح؟ |
+| 8 | التقارير | أرقام يومك في دقيقتين |
+| 9 | الفريق | صلاحيات العمال |
+| 10 | التجربة المجانية | 3 أيام تجربة: الخطة |
+
+```
+shorts/scripts.json  نصوص الفيديوهات العشرة (آخر قسم: دعوة للتجربة المجانية عبر واتساب)
+shorts/split.py      يقطع التسجيل الكامل لكل فيديو إلى أقسام حسب توقيت الكلمات -> sNN_a.wav و sNN_words.json
+shorts/kit9.js       التخطيط العمودي (هوامش آمنة لواجهة تيك توك)، الترجمة المدمجة، مشهد الدعوة الختامي
+```
+
+كل فيديو تسجيل واحد كامل (`ttNN/audio/takes/full.mp3` + `full_words.json` من Scribe)، يُقسَّم ثم يُركَّب على
+الإيقاع نفسه. `gap` في `ttNN/audio/plan.json` يضبط المدة على 60 ثانية.
+
+```bash
+ffmpeg -v error -y -i tt01/audio/takes/full.mp3 -ar 48000 -ac 1 tt01/audio/takes/full.wav
+uv run shorts/split.py tt01
+MOTION_REEL_SKILL=$SK uv run shared/score.py tt01
+MOTION_REEL_SKILL=$SK node tools/render_fast.mjs --film tt01 --format 9x16 --contact --every 4
+MOTION_REEL_SKILL=$SK node tools/render_fast.mjs --film tt01 --format 9x16 --video-only --workers 4
+MOTION_REEL_SKILL=$SK node tools/render_fast.mjs --film tt01 --format 9x16 --hits && node $SK/scripts/sfx.mjs tt01
+node $SK/scripts/mix.mjs tt01 --music-db -6 --sfx-db -4
+MOTION_REEL_SKILL=$SK node tools/render_fast.mjs --film tt01 --format 9x16 --poster
+```

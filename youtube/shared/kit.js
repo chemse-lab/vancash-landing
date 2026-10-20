@@ -632,7 +632,9 @@ export const SHOTS = {
 
 // Run an episode. scenes: 13 functions (12 VO sections + the end card).
 // hits(H_): add the episode's own sound accents (whooshes, the opener and the end card are shared).
-export function episode({ n, scenes, hits = () => {} }) {
+// overlay(ctx, u): drawn on top of every frame, outside the cut (the shorts' burned-in captions).
+// A scene that continues the previous one (the same function) cuts without a whip or a whoosh.
+export function episode({ n, scenes, hits = () => {}, overlay = null, fonts = [] }) {
   S.N = n;
   const HITS = [];
   const draw = (ctx, u) => {
@@ -640,7 +642,7 @@ export function episode({ n, scenes, hits = () => {} }) {
     let k = 0;
     while (k + 1 < START.length && u >= START[k + 1]) k++;
     const nb = START[k + 1];
-    if (nb !== undefined && u >= nb - PUSH) {
+    if (nb !== undefined && u >= nb - PUSH && scenes[k] !== scenes[k + 1]) {
       // RTL whip: the page leaves to the right, the next one arrives from the left; both on screen
       const e = whip(prog(u, nb - PUSH, nb));
       ctx.save(); ctx.translate(e * W, 0); scenes[k](ctx, u); ctx.restore();
@@ -649,6 +651,7 @@ export function episode({ n, scenes, hits = () => {} }) {
     }
     scenes[k](ctx, u);
   };
+  const drawAll = overlay ? (ctx, u) => { draw(ctx, u); overlay(ctx, u); } : draw;
   M.film({
     fonts: [F(100, 900), F(100, 700), F(40, 500, UI), F(40, 600, UI), F(40, 700, UI)],
     images: Object.fromEntries(Object.entries(SHOTS).map(([k, f]) => [k, `../shared/shots/${f}`])),
@@ -658,7 +661,7 @@ export function episode({ n, scenes, hits = () => {} }) {
     async init(ctx, images) {
       S.IMG = images;
       // the Arabic subsets load only when Arabic text asks for them
-      await Promise.all([F(100, 900), F(100, 800), F(100, 700), F(100, 600), F(40, 500, UI), F(40, 600, UI), F(40, 700, UI)]
+      await Promise.all([F(100, 900), F(100, 800), F(100, 700), F(100, 600), F(40, 500, UI), F(40, 600, UI), F(40, 700, UI), ...fonts]
         .map((f) => document.fonts.load(f, 'جهّز محلّك الآن')));
       const tl = await fetch('vo_timeline.json').then((r) => r.json());
       tl.sections.forEach((x) => { S.SEC[x.id] = x; });
@@ -666,12 +669,12 @@ export function episode({ n, scenes, hits = () => {} }) {
       S.START = [0, ...tl.sections.slice(1).map((x) => x.beat), tl.end_beat];
       S.BG = { paper: makeBg('paper'), blue: makeBg('blue'), navy: makeBg('navy'), mint: makeBg('mint') };
       const H_ = (b, label, sfx, o) => HITS.push([+b.toFixed(3), label, sfx, o || {}]);
-      S.START.slice(1).forEach((b, i) => H_(b, `whip lands, scene ${i + 2}`, 'whoosh', { len: 0.6, gain: 0.5 }));
+      S.START.slice(1).forEach((b, i) => { if (scenes[i] !== scenes[i + 1]) H_(b, `whip lands, scene ${i + 2}`, 'whoosh', { len: 0.6, gain: 0.5 }); });
       H_(0, 'hook lands', 'thud', { gain: 0.4 });
       H_(S.START.at(-1) + 0.6, 'end card', 'thud', { gain: 0.4 });
       hits(H_);
       HITS.sort((a, b) => a[0] - b[0]);
     },
-    draw,
+    draw: drawAll,
   });
 }
