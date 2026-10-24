@@ -71,16 +71,16 @@ function sHook(ctx, u) {
   };
   panel(540, kA, 'rgba(36,87,245,0.28)');
   if (kA > 0.3) {
-    house(ctx, 290, 520, Math.min(1, kA), C.white);
-    K.person(ctx, 640, 600, 0.9, C.blueL, Math.min(1, kA));
-    phoneWithMark(ctx, 735, 560, 46, Math.min(1, springU(u, 0.6, SPRING.bouncy)), 0.25);
+    house(ctx, 300, 510, 0.9 * Math.min(1, kA), C.white);
+    K.person(ctx, 660, 560, 0.75, C.blueL, Math.min(1, kA));
+    phoneWithMark(ctx, 745, 530, 42, Math.min(1, springU(u, 0.6, SPRING.bouncy)), 0.25);
     say(ctx, 'راك في الدار', 500, 700, font(64, 1000), C.white);
   }
   panel(1010, kB, 'rgba(255,159,67,0.22)');
   if (kB > 0.3) {
-    icon(ctx, 'shop', 290, 990, 230, C.white, { width: 1.6 });
-    K.person(ctx, 660, 1070, 0.9, '#FF9F43', Math.min(1, kB));
-    say(ctx, 'والخدّام وحدو في المحل', 500, 1170, font(56, 1000), C.white);
+    icon(ctx, 'shop', 300, 975, 200, C.white, { width: 1.6 });
+    K.person(ctx, 680, 1020, 0.75, '#FF9F43', Math.min(1, kB));
+    say(ctx, 'والخدّام وحدو في المحل', 500, 1172, font(56, 1000), C.white);
   }
   // the link between them is broken
   const kq = springU(u, B(7) - 0.2, SPRING.bouncy);
